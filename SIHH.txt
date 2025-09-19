@@ -1,0 +1,2629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Jharkhand - Eco & Cultural Treasures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'jharkhand-green': '#2d5016',
+                        'jharkhand-brown': '#8b4513',
+                        'jharkhand-blue': '#1e40af'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Poppins', sans-serif; }
+        
+        .hero-bg {
+            background: linear-gradient(rgba(45, 80, 22, 0.7), rgba(45, 80, 22, 0.7)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23228B22" width="1200" height="600"/><path fill="%2332CD32" d="M0 400c200-50 400-100 600-50s400 100 600 50v200H0z"/><circle fill="%23FFD700" cx="900" cy="100" r="60"/><rect fill="%238B4513" x="100" y="450" width="80" height="150"/><rect fill="%23228B22" x="110" y="430" width="60" height="20" rx="30"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+        
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <!-- Emergency SOS Bar -->
+    <div class="bg-red-600 text-white py-2 px-4 text-center">
+        <div class="flex items-center justify-center space-x-4">
+            <span class="font-semibold">🚨 Emergency SOS:</span>
+            <a href="tel:112" class="hover:underline">Police: 112</a>
+            <a href="tel:108" class="hover:underline">Ambulance: 108</a>
+            <a href="tel:101" class="hover:underline">Fire: 101</a>
+            <button onclick="sendSOSAlert()" class="bg-white text-red-600 px-3 py-1 rounded text-sm font-bold hover:bg-gray-100">
+                Send SOS Alert
+            </button>
+        </div>
+    </div>
+
+    <!-- Weather Alert Bar -->
+    <div id="weather-alert" class="bg-blue-600 text-white py-2 px-4 text-center hidden">
+        <div class="flex items-center justify-center space-x-2">
+            <span class="animate-pulse">⚠️</span>
+            <span id="weather-message">Weather Alert: Heavy rainfall expected in Ranchi region</span>
+            <button onclick="closeWeatherAlert()" class="ml-4 text-white hover:text-gray-200">✕</button>
+        </div>
+    </div>
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-jharkhand-green">🌿 Jharkhand Tourism</div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#home" class="text-gray-700 hover:text-jharkhand-green transition-colors">Home</a>
+                    <a href="#destinations" class="text-gray-700 hover:text-jharkhand-green transition-colors">Destinations</a>
+                    <a href="#accommodation" class="text-gray-700 hover:text-jharkhand-green transition-colors">Stay</a>
+                    <a href="#restaurants" class="text-gray-700 hover:text-jharkhand-green transition-colors">Dine</a>
+                    <a href="#packages" class="text-gray-700 hover:text-jharkhand-green transition-colors">Packages</a>
+                    <a href="#offers" class="text-gray-700 hover:text-jharkhand-green transition-colors">Offers</a>
+                    <a href="#map" class="text-gray-700 hover:text-jharkhand-green transition-colors">Map</a>
+                    <a href="#weather" class="text-gray-700 hover:text-jharkhand-green transition-colors">Weather</a>
+                    <button onclick="openSOSModal()" class="bg-red-600 text-white px-3 py-1 rounded-full text-sm hover:bg-red-700 transition-colors">SOS</button>
+                    <button onclick="openLoginModal()" class="bg-jharkhand-green text-white px-3 py-1 rounded-full text-sm hover:bg-green-700 transition-colors">Login</button>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Image Carousel -->
+    <section id="home" class="relative h-screen flex items-center justify-center text-white overflow-hidden">
+        <!-- Image Carousel Background -->
+        <div class="absolute inset-0 z-0">
+            <div id="hero-carousel" class="relative w-full h-full">
+                <div class="carousel-slide active absolute inset-0 bg-cover bg-center transition-opacity duration-1000" 
+                     style="background-image: linear-gradient(rgba(45, 80, 22, 0.6), rgba(45, 80, 22, 0.6)), url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                </div>
+                <div class="carousel-slide absolute inset-0 bg-cover bg-center transition-opacity duration-1000 opacity-0" 
+                     style="background-image: linear-gradient(rgba(45, 80, 22, 0.6), rgba(45, 80, 22, 0.6)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                </div>
+                <div class="carousel-slide absolute inset-0 bg-cover bg-center transition-opacity duration-1000 opacity-0" 
+                     style="background-image: linear-gradient(rgba(45, 80, 22, 0.6), rgba(45, 80, 22, 0.6)), url('https://images.unsplash.com/photo-1549366021-9f761d040a94?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                </div>
+                <div class="carousel-slide absolute inset-0 bg-cover bg-center transition-opacity duration-1000 opacity-0" 
+                     style="background-image: linear-gradient(rgba(45, 80, 22, 0.6), rgba(45, 80, 22, 0.6)), url('https://images.unsplash.com/photo-1582510003544-4d00b7f74220?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                </div>
+                <div class="carousel-slide absolute inset-0 bg-cover bg-center transition-opacity duration-1000 opacity-0" 
+                     style="background-image: linear-gradient(rgba(45, 80, 22, 0.6), rgba(45, 80, 22, 0.6)), url('https://images.unsplash.com/photo-1571115764595-644a1f56a55c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                </div>
+            </div>
+            
+            <!-- Carousel Navigation -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+                <button onclick="goToSlide(0)" class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition-all active"></button>
+                <button onclick="goToSlide(1)" class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition-all"></button>
+                <button onclick="goToSlide(2)" class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition-all"></button>
+                <button onclick="goToSlide(3)" class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition-all"></button>
+                <button onclick="goToSlide(4)" class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition-all"></button>
+            </div>
+            
+            <!-- Carousel Arrows -->
+            <button onclick="previousSlide()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white p-2 rounded-full transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <button onclick="nextSlide()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white p-2 rounded-full transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-10 text-center max-w-4xl mx-auto px-4">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 fade-in">Discover Eco & Cultural Treasures of Jharkhand</h1>
+            <p class="text-xl md:text-2xl mb-8 fade-in">Experience pristine waterfalls, rich tribal heritage, and untouched wilderness</p>
+            
+            <!-- Search Bar -->
+            <div class="bg-white rounded-full p-2 max-w-2xl mx-auto mb-8 fade-in">
+                <div class="flex items-center">
+                    <input type="text" placeholder="Search destinations, events, homestays..." class="flex-1 px-6 py-3 text-gray-700 rounded-full focus:outline-none">
+                    <button class="bg-jharkhand-green text-white px-8 py-3 rounded-full hover:bg-green-700 transition-colors">
+                        🔍 Search
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-4 fade-in">
+                <button onclick="scrollToSection('destinations')" class="bg-jharkhand-blue text-white px-6 py-3 rounded-full hover:bg-blue-700 transition-colors">
+                    Explore Destinations
+                </button>
+                <button onclick="openPlanTrip()" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-full hover:bg-white hover:text-jharkhand-green transition-colors">
+                    Plan Your Trip
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Attractions -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Top Attractions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Netarhat Hill Station" 
+                         class="h-48 w-full object-cover"
+                         onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-green-600 hidden items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-2">🏔️</div>
+                            <div class="font-semibold">Netarhat</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Queen of Chotanagpur</h3>
+                        <p class="text-gray-600 text-sm mb-4">Breathtaking sunrise views and cool climate</p>
+                        <button onclick="showDestinationDetails('netarhat')" class="text-jharkhand-green font-semibold hover:underline">Learn More →</button>
+                    </div>
+                </div>
+                
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Hundru Falls Waterfall" 
+                         class="h-48 w-full object-cover"
+                         onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 hidden items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-2">💧</div>
+                            <div class="font-semibold">Hundru Falls</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Majestic Waterfall</h3>
+                        <p class="text-gray-600 text-sm mb-4">320 feet cascading natural wonder</p>
+                        <button onclick="showDestinationDetails('hundru')" class="text-jharkhand-green font-semibold hover:underline">Learn More →</button>
+                    </div>
+                </div>
+                
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1549366021-9f761d040a94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Betla National Park Wildlife" 
+                         class="h-48 w-full object-cover"
+                         onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="h-48 bg-gradient-to-br from-yellow-400 to-orange-500 hidden items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-2">🦌</div>
+                            <div class="font-semibold">Betla National Park</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Wildlife Paradise</h3>
+                        <p class="text-gray-600 text-sm mb-4">Tigers, elephants, and diverse flora</p>
+                        <button onclick="showDestinationDetails('betla')" class="text-jharkhand-green font-semibold hover:underline">Learn More →</button>
+                    </div>
+                </div>
+                
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Deoghar Temple Complex" 
+                         class="h-48 w-full object-cover"
+                         onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-pink-500 hidden items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-2">🕉️</div>
+                            <div class="font-semibold">Deoghar</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Spiritual Haven</h3>
+                        <p class="text-gray-600 text-sm mb-4">Sacred Baidyanath Temple complex</p>
+                        <button onclick="showDestinationDetails('deoghar')" class="text-jharkhand-green font-semibold hover:underline">Learn More →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Accommodation Section -->
+    <section id="accommodation" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">🏨 Stay in Jharkhand</h2>
+            
+            <!-- Filter Options -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterAccommodation('all')" class="accommodation-filter active bg-jharkhand-green text-white px-6 py-2 rounded-full">All</button>
+                <button onclick="filterAccommodation('hotels')" class="accommodation-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Hotels</button>
+                <button onclick="filterAccommodation('resorts')" class="accommodation-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Resorts</button>
+                <button onclick="filterAccommodation('homestays')" class="accommodation-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Homestays</button>
+                <button onclick="filterAccommodation('budget')" class="accommodation-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Budget</button>
+            </div>
+            
+            <!-- Accommodation Grid -->
+            <div id="accommodation-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Accommodations will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Restaurants Section -->
+    <section id="restaurants" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">🍽️ Local Cuisine & Restaurants</h2>
+            
+            <!-- Cuisine Types -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterRestaurants('all')" class="restaurant-filter active bg-jharkhand-green text-white px-6 py-2 rounded-full">All</button>
+                <button onclick="filterRestaurants('tribal')" class="restaurant-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Tribal Food</button>
+                <button onclick="filterRestaurants('traditional')" class="restaurant-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Traditional</button>
+                <button onclick="filterRestaurants('street')" class="restaurant-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Street Food</button>
+                <button onclick="filterRestaurants('fine')" class="restaurant-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Fine Dining</button>
+            </div>
+            
+            <!-- Featured Dishes -->
+            <div class="bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-8 mb-12 text-white">
+                <h3 class="text-2xl font-bold text-center mb-8">Must-Try Jharkhand Delicacies</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-4xl mb-2">🥟</div>
+                        <h4 class="font-bold">Dhuska</h4>
+                        <p class="text-sm opacity-90">Deep-fried rice pancake</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl mb-2">🍛</div>
+                        <h4 class="font-bold">Litti Chokha</h4>
+                        <p class="text-sm opacity-90">Roasted wheat balls</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl mb-2">🍺</div>
+                        <h4 class="font-bold">Handia</h4>
+                        <p class="text-sm opacity-90">Traditional rice beer</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl mb-2">🍰</div>
+                        <h4 class="font-bold">Pitha</h4>
+                        <p class="text-sm opacity-90">Sweet rice cakes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Restaurant Grid -->
+            <div id="restaurant-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Restaurants will be populated by JavaScript -->
+            </div>
+            
+            <!-- Find Nearby Restaurants -->
+            <div class="text-center mt-12">
+                <button onclick="findNearbyRestaurants()" class="bg-jharkhand-blue text-white px-8 py-3 rounded-full hover:bg-blue-700 transition-colors">
+                    📍 Find Restaurants Near Me
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Travel Packages Section -->
+    <section id="packages" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">🎒 Ready-Made Travel Packages</h2>
+            
+            <!-- Package Categories -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterPackages('all')" class="package-filter active bg-jharkhand-green text-white px-6 py-2 rounded-full">All Packages</button>
+                <button onclick="filterPackages('eco')" class="package-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Eco Tours</button>
+                <button onclick="filterPackages('cultural')" class="package-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Cultural</button>
+                <button onclick="filterPackages('spiritual')" class="package-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Spiritual</button>
+                <button onclick="filterPackages('weekend')" class="package-filter bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Weekend</button>
+            </div>
+            
+            <!-- Packages Grid -->
+            <div id="packages-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Packages will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Section -->
+    <section id="map" class="py-16 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">🗺️ Explore Jharkhand Map</h2>
+            
+            <!-- Transport Options -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-3">✈️</div>
+                    <h3 class="font-bold mb-2">Airports</h3>
+                    <p class="text-sm opacity-90">Ranchi (Birsa Munda)</p>
+                    <p class="text-sm opacity-90">Deoghar Airport</p>
+                </div>
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-3">🚂</div>
+                    <h3 class="font-bold mb-2">Railway</h3>
+                    <p class="text-sm opacity-90">Ranchi Junction</p>
+                    <p class="text-sm opacity-90">Deoghar Station</p>
+                </div>
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-3">🚌</div>
+                    <h3 class="font-bold mb-2">Bus Routes</h3>
+                    <p class="text-sm opacity-90">State & Private</p>
+                    <p class="text-sm opacity-90">Inter-city services</p>
+                </div>
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-3">🚗</div>
+                    <h3 class="font-bold mb-2">Cab Booking</h3>
+                    <p class="text-sm opacity-90">Local & Outstation</p>
+                    <button onclick="bookCab()" class="mt-2 bg-yellow-500 text-black px-4 py-1 rounded-full text-sm hover:bg-yellow-400 transition-colors">Book Now</button>
+                </div>
+            </div>
+            
+            <!-- Interactive Map Placeholder -->
+            <div class="bg-white bg-opacity-10 rounded-2xl p-8 text-center">
+                <div class="text-6xl mb-4">🗺️</div>
+                <h3 class="text-2xl font-bold mb-4">Interactive Jharkhand Map</h3>
+                <p class="text-gray-300 mb-6">Click on destinations to get directions, nearby facilities, and travel information</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <button onclick="showOnMap('ranchi')" class="bg-jharkhand-green px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">Ranchi</button>
+                    <button onclick="showOnMap('netarhat')" class="bg-jharkhand-green px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">Netarhat</button>
+                    <button onclick="showOnMap('deoghar')" class="bg-jharkhand-green px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">Deoghar</button>
+                    <button onclick="showOnMap('betla')" class="bg-jharkhand-green px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">Betla</button>
+                </div>
+                <button onclick="openFullMap()" class="bg-white text-gray-900 px-8 py-3 rounded-full hover:bg-gray-100 transition-colors font-semibold">
+                    Open Full Interactive Map
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weather Section -->
+    <section id="weather" class="py-16 bg-gradient-to-br from-blue-400 to-purple-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">🌤️ Weather Forecast</h2>
+            
+            <!-- Current Weather -->
+            <div class="bg-white bg-opacity-20 rounded-2xl p-8 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-4">Current Weather - Ranchi</h3>
+                        <div class="text-6xl mb-4">🌤️</div>
+                        <div class="text-4xl font-bold mb-2" id="current-temp">28°C</div>
+                        <div class="text-lg" id="current-condition">Partly Cloudy</div>
+                        <div class="text-sm opacity-90 mt-2">Feels like 31°C</div>
+                        <div class="text-sm opacity-90">Humidity: 65%</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-4">Travel Conditions</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-center space-x-2">
+                                <span class="text-green-300">✓</span>
+                                <span>Perfect for sightseeing</span>
+                            </div>
+                            <div class="flex items-center justify-center space-x-2">
+                                <span class="text-green-300">✓</span>
+                                <span>Good for trekking</span>
+                            </div>
+                            <div class="flex items-center justify-center space-x-2">
+                                <span class="text-yellow-300">⚠</span>
+                                <span>Carry light jacket</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-4">Best Destinations Today</h3>
+                        <div class="space-y-2">
+                            <div class="bg-white bg-opacity-20 rounded-lg p-2">
+                                <div class="font-semibold">Hundru Falls</div>
+                                <div class="text-sm opacity-90">Perfect weather</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-2">
+                                <div class="font-semibold">Rock Garden</div>
+                                <div class="text-sm opacity-90">Ideal conditions</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-2">
+                                <div class="font-semibold">Netarhat</div>
+                                <div class="text-sm opacity-90">Clear skies</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 5-Day Forecast -->
+            <div class="bg-white bg-opacity-20 rounded-2xl p-8">
+                <h3 class="text-2xl font-bold text-center mb-8">5-Day Weather Forecast</h3>
+                <div id="weather-forecast" class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                    <!-- Forecast will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Weather Alerts -->
+            <div class="mt-12 text-center">
+                <button onclick="subscribeWeatherAlerts()" class="bg-white text-blue-600 px-8 py-3 rounded-full hover:bg-gray-100 transition-colors font-semibold">
+                    🔔 Subscribe to Weather Alerts
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Destinations Section -->
+    <section id="destinations" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Explore Destinations</h2>
+            
+            <!-- Category Filters -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterDestinations('all')" class="filter-btn active bg-jharkhand-green text-white px-6 py-2 rounded-full">All</button>
+                <button onclick="filterDestinations('nature')" class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Nature Spots</button>
+                <button onclick="filterDestinations('waterfalls')" class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Waterfalls</button>
+                <button onclick="filterDestinations('wildlife')" class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Wildlife</button>
+                <button onclick="filterDestinations('heritage')" class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Heritage</button>
+                <button onclick="filterDestinations('temples')" class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full border hover:bg-jharkhand-green hover:text-white transition-colors">Temples</button>
+            </div>
+            
+            <!-- Destinations Grid -->
+            <div id="destinations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Destinations will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers Section -->
+    <section id="offers" class="py-16 bg-gradient-to-r from-orange-400 to-red-500 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">🎉 Special Offers & Discounts</h2>
+            
+            <!-- Live Weather Report -->
+            <div class="bg-white bg-opacity-20 rounded-xl p-6 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-2">🌤️ Live Weather</h3>
+                        <div id="current-weather">
+                            <div class="text-2xl font-bold">28°C</div>
+                            <div class="text-sm">Partly Cloudy</div>
+                            <div class="text-xs">Ranchi - Updated 2 min ago</div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-2">📊 Tourist Traffic</h3>
+                        <div class="text-2xl font-bold text-green-300">Low</div>
+                        <div class="text-sm">Best time to visit!</div>
+                        <div class="text-xs">Updated hourly</div>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-2">🚨 Travel Alerts</h3>
+                        <div class="text-sm text-yellow-300">Road construction on NH-33</div>
+                        <div class="text-xs">Alternative routes available</div>
+                        <button onclick="showTravelAlerts()" class="text-xs underline hover:no-underline">View All Alerts</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Discount Offers -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white text-gray-800 rounded-xl p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <div class="bg-red-500 text-white rounded-full px-3 py-1 text-sm font-bold inline-block mb-2">
+                            LIMITED TIME
+                        </div>
+                        <h3 class="text-xl font-bold">Early Bird Special</h3>
+                    </div>
+                    <div class="text-center mb-4">
+                        <div class="text-3xl font-bold text-red-500">40% OFF</div>
+                        <div class="text-sm text-gray-600">on all homestays</div>
+                    </div>
+                    <ul class="text-sm space-y-2 mb-6">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Book 7 days in advance</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Valid for 2+ nights stay</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Includes breakfast</li>
+                    </ul>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-500 mb-2">Expires: Dec 31, 2024</div>
+                        <button onclick="claimOffer('early-bird')" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors">
+                            Claim Offer
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white text-gray-800 rounded-xl p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <div class="bg-green-500 text-white rounded-full px-3 py-1 text-sm font-bold inline-block mb-2">
+                            WEEKEND SPECIAL
+                        </div>
+                        <h3 class="text-xl font-bold">Adventure Package</h3>
+                    </div>
+                    <div class="text-center mb-4">
+                        <div class="text-3xl font-bold text-green-500">₹2,999</div>
+                        <div class="text-sm text-gray-600 line-through">₹4,999</div>
+                    </div>
+                    <ul class="text-sm space-y-2 mb-6">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>2D/1N Netarhat + Betla</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Safari + Trekking</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>All meals included</li>
+                    </ul>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-500 mb-2">Valid: Weekends only</div>
+                        <button onclick="claimOffer('adventure')" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors">
+                            Book Package
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white text-gray-800 rounded-xl p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <div class="bg-blue-500 text-white rounded-full px-3 py-1 text-sm font-bold inline-block mb-2">
+                            GROUP DISCOUNT
+                        </div>
+                        <h3 class="text-xl font-bold">Family & Friends</h3>
+                    </div>
+                    <div class="text-center mb-4">
+                        <div class="text-3xl font-bold text-blue-500">25% OFF</div>
+                        <div class="text-sm text-gray-600">for groups of 6+</div>
+                    </div>
+                    <ul class="text-sm space-y-2 mb-6">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Minimum 6 people</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Free group guide</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Custom itinerary</li>
+                    </ul>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-500 mb-2">Year-round offer</div>
+                        <button onclick="claimOffer('group')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                            Get Quote
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Flash Sale Timer -->
+            <div class="mt-12 text-center">
+                <div class="bg-black bg-opacity-30 rounded-xl p-6 inline-block">
+                    <h3 class="text-xl font-bold mb-4">⚡ Flash Sale Ends In:</h3>
+                    <div id="countdown-timer" class="flex justify-center space-x-4 text-2xl font-bold">
+                        <div class="text-center">
+                            <div id="hours">23</div>
+                            <div class="text-xs">Hours</div>
+                        </div>
+                        <div class="text-center">
+                            <div id="minutes">45</div>
+                            <div class="text-xs">Minutes</div>
+                        </div>
+                        <div class="text-center">
+                            <div id="seconds">30</div>
+                            <div class="text-xs">Seconds</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cultural Experiences -->
+    <section id="culture" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Cultural & Tribal Experiences</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold text-jharkhand-green mb-6">Rich Tribal Heritage</h3>
+                    <p class="text-gray-600 mb-6">Discover the vibrant culture of Jharkhand's indigenous communities through authentic experiences, traditional festivals, and age-old crafts passed down through generations.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-jharkhand-green rounded-full flex items-center justify-center text-white text-xl">🎭</div>
+                            <div>
+                                <h4 class="font-semibold">Traditional Festivals</h4>
+                                <p class="text-gray-600 text-sm">Sarhul, Karma, Sohrai celebrations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-jharkhand-brown rounded-full flex items-center justify-center text-white text-xl">🎨</div>
+                            <div>
+                                <h4 class="font-semibold">Handicrafts</h4>
+                                <p class="text-gray-600 text-sm">Dokra art, bamboo crafts, tribal paintings</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-jharkhand-blue rounded-full flex items-center justify-center text-white text-xl">🍽️</div>
+                            <div>
+                                <h4 class="font-semibold">Local Cuisine</h4>
+                                <p class="text-gray-600 text-sm">Dhuska, Litti Chokha, tribal delicacies</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="openCultureModal()" class="mt-6 bg-jharkhand-green text-white px-8 py-3 rounded-full hover:bg-green-700 transition-colors">
+                        Explore Culture
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gradient-to-br from-orange-400 to-red-500 rounded-xl p-6 text-white text-center">
+                        <div class="text-3xl mb-2">🏺</div>
+                        <h4 class="font-semibold">Pottery</h4>
+                        <p class="text-sm opacity-90">Traditional clay work</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-400 to-teal-500 rounded-xl p-6 text-white text-center">
+                        <div class="text-3xl mb-2">🎵</div>
+                        <h4 class="font-semibold">Folk Music</h4>
+                        <p class="text-sm opacity-90">Tribal songs & dances</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl p-6 text-white text-center">
+                        <div class="text-3xl mb-2">🧵</div>
+                        <h4 class="font-semibold">Textiles</h4>
+                        <p class="text-sm opacity-90">Handwoven fabrics</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl p-6 text-white text-center">
+                        <div class="text-3xl mb-2">💍</div>
+                        <h4 class="font-semibold">Jewelry</h4>
+                        <p class="text-sm opacity-90">Silver & brass ornaments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Trip Planner -->
+    <section id="plan" class="py-16 bg-jharkhand-green text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-6">AI-Powered Trip Planner</h2>
+            <p class="text-xl mb-12 opacity-90">Let our intelligent system create the perfect itinerary based on your preferences</p>
+            
+            <div class="bg-white rounded-2xl p-8 text-gray-800">
+                <h3 class="text-2xl font-bold mb-6">What interests you most?</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <label class="preference-option cursor-pointer">
+                        <input type="checkbox" class="hidden" value="nature">
+                        <div class="bg-gray-100 rounded-xl p-4 text-center hover:bg-jharkhand-green hover:text-white transition-colors">
+                            <div class="text-2xl mb-2">🌿</div>
+                            <div class="font-semibold">Nature</div>
+                        </div>
+                    </label>
+                    
+                    <label class="preference-option cursor-pointer">
+                        <input type="checkbox" class="hidden" value="adventure">
+                        <div class="bg-gray-100 rounded-xl p-4 text-center hover:bg-jharkhand-green hover:text-white transition-colors">
+                            <div class="text-2xl mb-2">🏔️</div>
+                            <div class="font-semibold">Adventure</div>
+                        </div>
+                    </label>
+                    
+                    <label class="preference-option cursor-pointer">
+                        <input type="checkbox" class="hidden" value="culture">
+                        <div class="bg-gray-100 rounded-xl p-4 text-center hover:bg-jharkhand-green hover:text-white transition-colors">
+                            <div class="text-2xl mb-2">🎭</div>
+                            <div class="font-semibold">Culture</div>
+                        </div>
+                    </label>
+                    
+                    <label class="preference-option cursor-pointer">
+                        <input type="checkbox" class="hidden" value="spiritual">
+                        <div class="bg-gray-100 rounded-xl p-4 text-center hover:bg-jharkhand-green hover:text-white transition-colors">
+                            <div class="text-2xl mb-2">🕉️</div>
+                            <div class="font-semibold">Spiritual</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-left font-semibold mb-2">Trip Duration</label>
+                    <select id="trip-duration" class="w-full p-3 border rounded-lg">
+                        <option value="1">1 Day</option>
+                        <option value="2">2-3 Days</option>
+                        <option value="4">4-7 Days</option>
+                        <option value="8">1+ Week</option>
+                    </select>
+                </div>
+                
+                <button onclick="generateItinerary()" class="bg-jharkhand-green text-white px-8 py-3 rounded-full hover:bg-green-700 transition-colors">
+                    🤖 Generate My Itinerary
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marketplace -->
+    <section id="marketplace" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Local Marketplace</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                        <div class="text-4xl">🏺</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Dokra Art Elephant</h3>
+                        <p class="text-gray-600 text-sm mb-2">Handcrafted by tribal artisan</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-jharkhand-green font-bold">₹2,500</span>
+                            <button onclick="addToCart('dokra-elephant')" class="bg-jharkhand-green text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center">
+                        <div class="text-4xl">🧺</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Bamboo Basket Set</h3>
+                        <p class="text-gray-600 text-sm mb-2">Eco-friendly storage solution</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-jharkhand-green font-bold">₹1,200</span>
+                            <button onclick="addToCart('bamboo-basket')" class="bg-jharkhand-green text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                        <div class="text-4xl">🎨</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Tribal Painting</h3>
+                        <p class="text-gray-600 text-sm mb-2">Traditional Sohrai art</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-jharkhand-green font-bold">₹3,800</span>
+                            <button onclick="addToCart('tribal-painting')" class="bg-jharkhand-green text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
+                        <div class="text-4xl">🏠</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Village Homestay</h3>
+                        <p class="text-gray-600 text-sm mb-2">Authentic tribal experience</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-jharkhand-green font-bold">₹1,500/night</span>
+                            <button onclick="bookHomestay('village-homestay')" class="bg-jharkhand-green text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button onclick="openMarketplace()" class="bg-jharkhand-blue text-white px-8 py-3 rounded-full hover:bg-blue-700 transition-colors">
+                    View All Products
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery Section -->
+    <section id="gallery" class="py-16 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">📸 Jharkhand Photo Gallery</h2>
+            <p class="text-center text-gray-300 mb-12">Stunning real images from across Jharkhand's most beautiful destinations</p>
+            
+            <!-- Gallery Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="group relative overflow-hidden rounded-xl cursor-pointer" onclick="openGalleryModal(0)">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Netarhat Hill Station Sunrise" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                         onerror="this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-64 bg-gradient-to-br from-orange-400 to-red-500 hidden items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-4xl mb-2">🌅</div>
+                            <div class="font-semibold">Netarhat Sunrise</div>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                        <div class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🔍</div>
+                                <div class="font-semibold">Netarhat Hill Station</div>
+                                <div class="text-sm">Queen of Chotanagpur</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative overflow-hidden rounded-xl cursor-pointer" onclick="openGalleryModal(1)">
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Hundru Falls Waterfall" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                         onerror="this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-64 bg-gradient-to-br from-blue-400 to-cyan-500 hidden items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-4xl mb-2">💧</div>
+                            <div class="font-semibold">Hundru Falls</div>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                        <div class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🔍</div>
+                                <div class="font-semibold">Hundru Falls</div>
+                                <div class="text-sm">320 feet cascade</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative overflow-hidden rounded-xl cursor-pointer" onclick="openGalleryModal(2)">
+                    <img src="https://images.unsplash.com/photo-1549366021-9f761d040a94?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Betla National Park Wildlife" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                         onerror="this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-64 bg-gradient-to-br from-green-400 to-emerald-500 hidden items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-4xl mb-2">🦌</div>
+                            <div class="font-semibold">Betla National Park</div>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                        <div class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🔍</div>
+                                <div class="font-semibold">Betla National Park</div>
+                                <div class="text-sm">Wildlife Paradise</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative overflow-hidden rounded-xl cursor-pointer" onclick="openGalleryModal(3)">
+                    <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Deoghar Temple Complex" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                         onerror="this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-64 bg-gradient-to-br from-purple-400 to-pink-500 hidden items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-4xl mb-2">🕉️</div>
+                            <div class="font-semibold">Deoghar Temples</div>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                        <div class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🔍</div>
+                                <div class="font-semibold">Deoghar Temples</div>
+                                <div class="text-sm">Sacred Pilgrimage</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative overflow-hidden rounded-xl cursor-pointer" onclick="openGalleryModal(4)">
+                    <img src="https://images.unsplash.com/photo-1571115764595-644a1f56a55c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Patratu Valley Landscape" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                         onerror="this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-64 bg-gradient-to-br from-teal-400 to-blue-500 hidden items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-4xl mb-2">🏞️</div>
+                            <div class="font-semibold">Patratu Valley</div>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                        <div class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🔍</div>
+                                <div class="font-semibold">Patratu Valley</div>
+                                <div class="text-sm">Scenic Beauty</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative overflow-hidden rounded-xl cursor-pointer" onclick="openGalleryModal(5)">
+                    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Tribal Culture and Handicrafts" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                         onerror="this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-64 bg-gradient-to-br from-amber-400 to-orange-500 hidden items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-4xl mb-2">🎨</div>
+                            <div class="font-semibold">Tribal Art</div>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                        <div class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🔍</div>
+                                <div class="font-semibold">Tribal Culture</div>
+                                <div class="text-sm">Rich Heritage</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button onclick="viewAllPhotos()" class="bg-white text-gray-900 px-8 py-3 rounded-full hover:bg-gray-100 transition-colors font-semibold">
+                    View All Photos (50+)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-jharkhand-green text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">📞 Contact Us</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-white bg-opacity-10 rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold mb-6">Get in Touch</h3>
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Full Name</label>
+                            <input type="text" class="w-full p-3 rounded-lg text-gray-800" placeholder="Your name" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Email</label>
+                            <input type="email" class="w-full p-3 rounded-lg text-gray-800" placeholder="your@email.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Phone</label>
+                            <input type="tel" class="w-full p-3 rounded-lg text-gray-800" placeholder="+91 XXXXX XXXXX">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Subject</label>
+                            <select class="w-full p-3 rounded-lg text-gray-800">
+                                <option>General Inquiry</option>
+                                <option>Booking Support</option>
+                                <option>Partnership</option>
+                                <option>Complaint</option>
+                                <option>Feedback</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Message</label>
+                            <textarea class="w-full p-3 rounded-lg text-gray-800 h-32" placeholder="Your message..." required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-white text-jharkhand-green py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">📍</div>
+                                <div>
+                                    <div class="font-semibold">Address</div>
+                                    <div class="opacity-90">Jharkhand Tourism Development Corporation</div>
+                                    <div class="opacity-90">Ranchi, Jharkhand 834001</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">📞</div>
+                                <div>
+                                    <div class="font-semibold">Phone</div>
+                                    <div class="opacity-90">+91-651-2446441</div>
+                                    <div class="opacity-90">Tourist Helpline: 1363</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">✉️</div>
+                                <div>
+                                    <div class="font-semibold">Email</div>
+                                    <div class="opacity-90">info@jharkhnadtourism.gov.in</div>
+                                    <div class="opacity-90">support@jharkhnadtourism.gov.in</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Media -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Follow Us</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">📘</a>
+                            <a href="#" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">📷</a>
+                            <a href="#" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">🐦</a>
+                            <a href="#" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">📺</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Office Hours -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Office Hours</h3>
+                        <div class="space-y-2 opacity-90">
+                            <div>Monday - Friday: 9:00 AM - 6:00 PM</div>
+                            <div>Saturday: 9:00 AM - 2:00 PM</div>
+                            <div>Sunday: Closed</div>
+                            <div class="text-yellow-300 font-semibold">Emergency Support: 24/7</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6">About Jharkhand Tourism</h2>
+                    <p class="text-gray-600 mb-6">Our mission is to promote sustainable and authentic tourism that benefits local communities while preserving Jharkhand's natural beauty and cultural heritage.</p>
+                    
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-jharkhand-green">50K+</div>
+                            <div class="text-gray-600">Tourists Helped</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-jharkhand-green">200+</div>
+                            <div class="text-gray-600">Artisans Supported</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-jharkhand-green">95%</div>
+                            <div class="text-gray-600">Satisfaction Rate</div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="joinCommunity()" class="bg-jharkhand-green text-white px-8 py-3 rounded-full hover:bg-green-700 transition-colors">
+                        Join Our Community
+                    </button>
+                </div>
+                
+                <div class="bg-gradient-to-br from-jharkhand-green to-green-600 rounded-2xl p-8 text-white">
+                    <h3 class="text-2xl font-bold mb-6">For Local Partners</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">✓</div>
+                            <span>Register as a local guide</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">✓</div>
+                            <span>List your homestay</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">✓</div>
+                            <span>Sell your handicrafts</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">✓</div>
+                            <span>Earn sustainable income</span>
+                        </div>
+                    </div>
+                    <button onclick="registerPartner()" class="mt-6 bg-white text-jharkhand-green px-6 py-3 rounded-full hover:bg-gray-100 transition-colors">
+                        Become a Partner
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="text-2xl font-bold mb-4">🌿 Jharkhand Tourism</div>
+                    <p class="text-gray-400">Discover the hidden gems of Jharkhand through sustainable and authentic experiences.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#destinations" class="hover:text-white transition-colors">Destinations</a></li>
+                        <li><a href="#culture" class="hover:text-white transition-colors">Culture</a></li>
+                        <li><a href="#plan" class="hover:text-white transition-colors">Plan Trip</a></li>
+                        <li><a href="#marketplace" class="hover:text-white transition-colors">Marketplace</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Travel Guidelines</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Safety Tips</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-jharkhand-green rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">📘</a>
+                        <a href="#" class="w-10 h-10 bg-jharkhand-green rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">📷</a>
+                        <a href="#" class="w-10 h-10 bg-jharkhand-green rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">🐦</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Jharkhand Tourism. All rights reserved. | Promoting sustainable and authentic travel experiences.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chatbot">
+        <button onclick="toggleChatbot()" class="w-16 h-16 bg-jharkhand-green text-white rounded-full shadow-lg hover:bg-green-700 transition-colors pulse-dot">
+            💬
+        </button>
+        
+        <div id="chatbot-window" class="hidden absolute bottom-20 right-0 w-80 bg-white rounded-lg shadow-xl border">
+            <div class="bg-jharkhand-green text-white p-4 rounded-t-lg">
+                <h4 class="font-bold">🌿 JharTour Guide</h4>
+                <p class="text-sm opacity-90">Namaste! How can I help you explore Jharkhand?</p>
+            </div>
+            <div class="p-4 h-64 overflow-y-auto" id="chat-messages">
+                <div class="bg-gray-100 rounded-lg p-3 mb-3">
+                    <p class="text-sm">Hello! I'm your virtual travel guide. Ask me about destinations, weather, transport, or anything about Jharkhand!</p>
+                </div>
+            </div>
+            <div class="p-4 border-t">
+                <div class="flex">
+                    <input type="text" id="chat-input" placeholder="Ask me anything..." class="flex-1 p-2 border rounded-l-lg focus:outline-none">
+                    <button onclick="sendChatMessage()" class="bg-jharkhand-green text-white px-4 py-2 rounded-r-lg hover:bg-green-700 transition-colors">
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="destination-modal" class="modal">
+        <div class="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="modal-title" class="text-2xl font-bold"></h3>
+                    <button onclick="closeModal('destination-modal')" class="text-gray-500 hover:text-gray-700">✕</button>
+                </div>
+                <div id="modal-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="itinerary-modal" class="modal">
+        <div class="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold">Your Personalized Itinerary</h3>
+                    <button onclick="closeModal('itinerary-modal')" class="text-gray-500 hover:text-gray-700">✕</button>
+                </div>
+                <div id="itinerary-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOS Modal -->
+    <div id="sos-modal" class="modal">
+        <div class="bg-white rounded-lg max-w-md w-full mx-4">
+            <div class="bg-red-600 text-white p-6 rounded-t-lg">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">🚨 Emergency SOS</h3>
+                    <button onclick="closeModal('sos-modal')" class="text-white hover:text-gray-200">✕</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="text-center mb-6">
+                        <div class="text-4xl mb-2">🆘</div>
+                        <p class="text-gray-600">Emergency contacts and services</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        <a href="tel:112" class="flex items-center justify-between bg-red-50 p-4 rounded-lg hover:bg-red-100 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center">🚔</div>
+                                <div>
+                                    <div class="font-semibold">Police</div>
+                                    <div class="text-sm text-gray-600">Emergency Police</div>
+                                </div>
+                            </div>
+                            <div class="font-bold text-red-600">112</div>
+                        </a>
+                        
+                        <a href="tel:108" class="flex items-center justify-between bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center">🚑</div>
+                                <div>
+                                    <div class="font-semibold">Ambulance</div>
+                                    <div class="text-sm text-gray-600">Medical Emergency</div>
+                                </div>
+                            </div>
+                            <div class="font-bold text-blue-600">108</div>
+                        </a>
+                        
+                        <a href="tel:101" class="flex items-center justify-between bg-orange-50 p-4 rounded-lg hover:bg-orange-100 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-orange-600 text-white rounded-full flex items-center justify-center">🚒</div>
+                                <div>
+                                    <div class="font-semibold">Fire Brigade</div>
+                                    <div class="text-sm text-gray-600">Fire Emergency</div>
+                                </div>
+                            </div>
+                            <div class="font-bold text-orange-600">101</div>
+                        </a>
+                        
+                        <a href="tel:1363" class="flex items-center justify-between bg-green-50 p-4 rounded-lg hover:bg-green-100 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center">🧭</div>
+                                <div>
+                                    <div class="font-semibold">Tourist Helpline</div>
+                                    <div class="text-sm text-gray-600">Travel Assistance</div>
+                                </div>
+                            </div>
+                            <div class="font-bold text-green-600">1363</div>
+                        </a>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t">
+                        <button onclick="sendSOSAlert()" class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                            📍 Send SOS Alert with Location
+                        </button>
+                        <p class="text-xs text-gray-500 text-center mt-2">This will share your GPS location with emergency services</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="bg-white rounded-lg max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800">Welcome Back</h3>
+                    <button onclick="closeModal('login-modal')" class="text-gray-500 hover:text-gray-700">✕</button>
+                </div>
+                
+                <!-- Login Tabs -->
+                <div class="flex mb-6">
+                    <button onclick="switchLoginTab('tourist')" id="tourist-tab" class="flex-1 py-2 px-4 bg-jharkhand-green text-white rounded-l-lg">Tourist</button>
+                    <button onclick="switchLoginTab('partner')" id="partner-tab" class="flex-1 py-2 px-4 bg-gray-200 text-gray-700 rounded-r-lg">Local Partner</button>
+                </div>
+                
+                <!-- Tourist Login Form -->
+                <div id="tourist-login" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Email or Phone</label>
+                        <input type="text" class="w-full p-3 border rounded-lg" placeholder="Enter email or phone">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Password</label>
+                        <input type="password" class="w-full p-3 border rounded-lg" placeholder="Enter password">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2">
+                            <span class="text-sm">Remember me</span>
+                        </label>
+                        <a href="#" class="text-sm text-jharkhand-green hover:underline">Forgot password?</a>
+                    </div>
+                    <button onclick="loginUser('tourist')" class="w-full bg-jharkhand-green text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+                        Login as Tourist
+                    </button>
+                    <div class="text-center">
+                        <span class="text-sm text-gray-600">Don't have an account? </span>
+                        <button onclick="showRegisterForm('tourist')" class="text-sm text-jharkhand-green hover:underline">Sign up</button>
+                    </div>
+                </div>
+                
+                <!-- Partner Login Form -->
+                <div id="partner-login" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Partner ID</label>
+                        <input type="text" class="w-full p-3 border rounded-lg" placeholder="Enter partner ID">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Password</label>
+                        <input type="password" class="w-full p-3 border rounded-lg" placeholder="Enter password">
+                    </div>
+                    <button onclick="loginUser('partner')" class="w-full bg-jharkhand-brown text-white py-3 rounded-lg hover:bg-yellow-700 transition-colors">
+                        Login as Partner
+                    </button>
+                    <div class="text-center">
+                        <span class="text-sm text-gray-600">Want to become a partner? </span>
+                        <button onclick="showRegisterForm('partner')" class="text-sm text-jharkhand-brown hover:underline">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="register-modal" class="modal">
+        <div class="bg-white rounded-lg max-w-lg w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800" id="register-title">Create Account</h3>
+                    <button onclick="closeModal('register-modal')" class="text-gray-500 hover:text-gray-700">✕</button>
+                </div>
+                
+                <div id="register-content">
+                    <!-- Registration form will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Destinations data
+        const destinations = [
+            {
+                id: 'netarhat',
+                name: 'Netarhat',
+                category: 'nature',
+                description: 'Known as the Queen of Chotanagpur, famous for sunrise and sunset views',
+                bestTime: 'October to March',
+                howToReach: 'By road from Ranchi (156 km)',
+                nearbyStays: 'Forest Rest House, Private resorts',
+                nearbyAttractions: 'Magnolia Point, Upper Ghaghri Falls',
+                icon: '🏔️'
+            },
+            {
+                id: 'hundru',
+                name: 'Hundru Falls',
+                category: 'waterfalls',
+                description: '320 feet high waterfall on Subarnarekha river',
+                bestTime: 'July to February',
+                howToReach: 'By road from Ranchi (45 km)',
+                nearbyStays: 'Ranchi hotels, nearby guesthouses',
+                nearbyAttractions: 'Jonha Falls, Panch Gagh Falls',
+                icon: '💧'
+            },
+            {
+                id: 'betla',
+                name: 'Betla National Park',
+                category: 'wildlife',
+                description: 'Home to tigers, elephants, and diverse wildlife',
+                bestTime: 'November to June',
+                howToReach: 'By road from Ranchi (150 km)',
+                nearbyStays: 'Forest lodges, eco-resorts',
+                nearbyAttractions: 'Palamau Fort, Kechki',
+                icon: '🦌'
+            },
+            {
+                id: 'deoghar',
+                name: 'Deoghar',
+                category: 'temples',
+                description: 'Sacred pilgrimage site with Baidyanath Temple',
+                bestTime: 'October to March',
+                howToReach: 'By train/road from major cities',
+                nearbyStays: 'Dharamshalas, hotels',
+                nearbyAttractions: 'Naulakha Mandir, Basukinath',
+                icon: '🕉️'
+            },
+            {
+                id: 'dassam',
+                name: 'Dassam Falls',
+                category: 'waterfalls',
+                description: 'Beautiful cascade falling from 144 feet height',
+                bestTime: 'July to February',
+                howToReach: 'By road from Ranchi (40 km)',
+                nearbyStays: 'Taimara resorts, Ranchi hotels',
+                nearbyAttractions: 'Taimara, Bundu',
+                icon: '💧'
+            },
+            {
+                id: 'parasnath',
+                name: 'Parasnath Hills',
+                category: 'heritage',
+                description: 'Highest peak in Jharkhand, Jain pilgrimage site',
+                bestTime: 'October to March',
+                howToReach: 'By train to Parasnath station',
+                nearbyStays: 'Dharamshalas, local guesthouses',
+                nearbyAttractions: 'Shikharji Temple, Madhuban',
+                icon: '⛰️'
+            },
+            {
+                id: 'jonha',
+                name: 'Jonha Falls',
+                category: 'waterfalls',
+                description: 'Spectacular 43-meter waterfall also known as Gautamdhara',
+                bestTime: 'July to February',
+                howToReach: 'By road from Ranchi (40 km)',
+                nearbyStays: 'Ranchi hotels, resorts',
+                nearbyAttractions: 'Hundru Falls, Panch Gagh Falls',
+                icon: '🌊'
+            },
+            {
+                id: 'rajrappa',
+                name: 'Rajrappa Temple',
+                category: 'temples',
+                description: 'Ancient temple dedicated to Goddess Chhinnamasta',
+                bestTime: 'October to March',
+                howToReach: 'By road from Ranchi (80 km)',
+                nearbyStays: 'Temple guesthouses, Ramgarh hotels',
+                nearbyAttractions: 'Damodar River, Coal mines',
+                icon: '🛕'
+            },
+            {
+                id: 'shikharji',
+                name: 'Shikharji Temple',
+                category: 'temples',
+                description: 'Most sacred Jain pilgrimage site with 20 temples',
+                bestTime: 'October to March',
+                howToReach: 'By train to Parasnath, then trek',
+                nearbyStays: 'Dharamshalas, pilgrim houses',
+                nearbyAttractions: 'Parasnath Hills, Madhuban',
+                icon: '🏛️'
+            },
+            {
+                id: 'rockgarden',
+                name: 'Rock Garden, Ranchi',
+                category: 'nature',
+                description: 'Beautiful garden with natural rock formations and lake',
+                bestTime: 'October to March',
+                howToReach: 'By road from Ranchi city center (10 km)',
+                nearbyStays: 'Ranchi city hotels',
+                nearbyAttractions: 'Kanke Dam, Tagore Hill',
+                icon: '🪨'
+            }
+        ];
+
+        // Carousel functionality
+        let currentSlide = 0;
+        const totalSlides = 5;
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+        
+        function previousSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+        
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateCarousel();
+        }
+        
+        function updateCarousel() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.remove('opacity-0');
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.add('opacity-0');
+                    slide.classList.remove('active');
+                }
+            });
+            
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active', 'bg-opacity-100');
+                    dot.classList.remove('bg-opacity-50');
+                } else {
+                    dot.classList.remove('active', 'bg-opacity-100');
+                    dot.classList.add('bg-opacity-50');
+                }
+            });
+        }
+        
+        // Auto-advance carousel
+        function startCarousel() {
+            setInterval(() => {
+                nextSlide();
+            }, 5000); // Change slide every 5 seconds
+        }
+
+        // Gallery functionality
+        const galleryImages = [
+            {
+                src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+                title: 'Netarhat Hill Station',
+                description: 'Known as the Queen of Chotanagpur, famous for breathtaking sunrise and sunset views'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+                title: 'Hundru Falls',
+                description: 'Majestic 320 feet waterfall cascading down the Subarnarekha river'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+                title: 'Betla National Park',
+                description: 'Home to tigers, elephants, and diverse wildlife in pristine forest setting'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+                title: 'Deoghar Temple Complex',
+                description: 'Sacred Baidyanath Temple, one of the twelve Jyotirlingas'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+                title: 'Patratu Valley',
+                description: 'Scenic valley with rolling hills and pristine natural beauty'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+                title: 'Tribal Culture',
+                description: 'Rich heritage of indigenous communities and traditional handicrafts'
+            }
+        ];
+        
+        function openGalleryModal(imageIndex) {
+            const image = galleryImages[imageIndex];
+            document.getElementById('modal-title').textContent = image.title;
+            document.getElementById('modal-content').innerHTML = `
+                <div class="space-y-6">
+                    <img src="${image.src}" alt="${image.title}" class="w-full h-96 object-cover rounded-lg"
+                         onerror="this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-96 bg-gradient-to-br from-blue-400 to-green-500 hidden items-center justify-center rounded-lg">
+                        <div class="text-center text-white">
+                            <div class="text-6xl mb-4">📸</div>
+                            <div class="text-xl font-semibold">${image.title}</div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-gray-600 text-lg">${image.description}</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="shareImage('${image.title}')" class="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                            📤 Share Image
+                        </button>
+                        <button onclick="downloadImage('${image.src}', '${image.title}')" class="flex-1 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors">
+                            💾 Download
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('destination-modal').classList.add('active');
+        }
+        
+        function viewAllPhotos() {
+            showNotification('Opening full photo gallery with 50+ images! 📸');
+        }
+        
+        function shareImage(title) {
+            if (navigator.share) {
+                navigator.share({
+                    title: `${title} - Jharkhand Tourism`,
+                    text: `Check out this beautiful image of ${title} from Jharkhand!`,
+                    url: window.location.href
+                });
+            } else {
+                showNotification('Image sharing link copied to clipboard! 📋');
+            }
+        }
+        
+        function downloadImage(src, title) {
+            showNotification(`Downloading ${title} image... 💾`);
+        }
+
+        // Data for new sections
+        const accommodations = [
+            {
+                id: 'hotel-capitol',
+                name: 'Hotel Capitol Hill',
+                type: 'hotels',
+                location: 'Ranchi',
+                price: '₹3,500',
+                rating: 4.2,
+                amenities: ['WiFi', 'Restaurant', 'AC', 'Parking'],
+                description: 'Luxury hotel in heart of Ranchi'
+            },
+            {
+                id: 'netarhat-resort',
+                name: 'Netarhat Forest Resort',
+                type: 'resorts',
+                location: 'Netarhat',
+                price: '₹2,800',
+                rating: 4.5,
+                amenities: ['Nature View', 'Restaurant', 'Bonfire', 'Trekking'],
+                description: 'Eco-resort with stunning hill views'
+            },
+            {
+                id: 'tribal-homestay',
+                name: 'Authentic Tribal Homestay',
+                type: 'homestays',
+                location: 'Khunti',
+                price: '₹1,200',
+                rating: 4.8,
+                amenities: ['Local Food', 'Cultural Experience', 'Village Tour'],
+                description: 'Experience authentic tribal lifestyle'
+            },
+            {
+                id: 'budget-lodge',
+                name: 'Traveler\'s Budget Lodge',
+                type: 'budget',
+                location: 'Deoghar',
+                price: '₹800',
+                rating: 3.9,
+                amenities: ['Clean Rooms', 'Basic Amenities', 'Temple Nearby'],
+                description: 'Affordable stay near temples'
+            }
+        ];
+
+        const restaurants = [
+            {
+                id: 'tribal-kitchen',
+                name: 'Tribal Kitchen',
+                type: 'tribal',
+                location: 'Ranchi',
+                cuisine: 'Tribal Authentic',
+                rating: 4.6,
+                specialties: ['Handia', 'Bamboo Chicken', 'Tribal Thali'],
+                description: 'Authentic tribal cuisine experience'
+            },
+            {
+                id: 'litti-corner',
+                name: 'Litti Corner',
+                type: 'traditional',
+                location: 'Ranchi',
+                cuisine: 'Traditional Bihari',
+                rating: 4.3,
+                specialties: ['Litti Chokha', 'Sattu Paratha', 'Dhuska'],
+                description: 'Famous for traditional Litti Chokha'
+            },
+            {
+                id: 'street-food-hub',
+                name: 'Main Road Street Food',
+                type: 'street',
+                location: 'Ranchi',
+                cuisine: 'Street Food',
+                rating: 4.1,
+                specialties: ['Pani Puri', 'Aloo Tikki', 'Jhal Muri'],
+                description: 'Popular street food destination'
+            },
+            {
+                id: 'heritage-dining',
+                name: 'Heritage Fine Dining',
+                type: 'fine',
+                location: 'Ranchi',
+                cuisine: 'Multi-cuisine',
+                rating: 4.4,
+                specialties: ['Continental', 'Indian', 'Chinese'],
+                description: 'Upscale dining with great ambiance'
+            }
+        ];
+
+        const packages = [
+            {
+                id: 'eco-adventure',
+                name: 'Eco Adventure Package',
+                type: 'eco',
+                duration: '3D/2N',
+                price: '₹8,999',
+                destinations: ['Netarhat', 'Betla National Park'],
+                includes: ['Accommodation', 'Meals', 'Safari', 'Guide'],
+                description: 'Perfect blend of nature and adventure'
+            },
+            {
+                id: 'cultural-heritage',
+                name: 'Cultural Heritage Tour',
+                type: 'cultural',
+                duration: '4D/3N',
+                price: '₹12,999',
+                destinations: ['Tribal Villages', 'Handicraft Centers', 'Cultural Sites'],
+                includes: ['Homestay', 'Cultural Shows', 'Craft Workshops'],
+                description: 'Immerse in rich tribal culture'
+            },
+            {
+                id: 'spiritual-journey',
+                name: 'Spiritual Journey',
+                type: 'spiritual',
+                duration: '5D/4N',
+                price: '₹15,999',
+                destinations: ['Deoghar', 'Parasnath Hills', 'Rajrappa'],
+                includes: ['Temple Visits', 'Accommodation', 'Meals', 'Guide'],
+                description: 'Sacred pilgrimage across Jharkhand'
+            },
+            {
+                id: 'weekend-getaway',
+                name: 'Weekend Waterfall Tour',
+                type: 'weekend',
+                duration: '2D/1N',
+                price: '₹5,999',
+                destinations: ['Hundru Falls', 'Jonha Falls', 'Dassam Falls'],
+                includes: ['Transport', 'Lunch', 'Photography'],
+                description: 'Quick weekend escape to waterfalls'
+            }
+        ];
+
+        // Initialize the website
+        document.addEventListener('DOMContentLoaded', function() {
+            renderDestinations('all');
+            renderAccommodations('all');
+            renderRestaurants('all');
+            renderPackages('all');
+            setupPreferenceOptions();
+            setupMobileMenu();
+            startCountdownTimer();
+            updateWeatherInfo();
+            showRandomWeatherAlert();
+            startCarousel();
+            generateWeatherForecast();
+            setupContactForm();
+        });
+
+        // Smooth scrolling
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Mobile menu
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            mobileMenuBtn.addEventListener('click', function() {
+                // Simple mobile menu toggle (you can enhance this)
+                alert('Mobile menu would open here');
+            });
+        }
+
+        // Destination filtering
+        function filterDestinations(category) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-jharkhand-green', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700');
+            });
+            event.target.classList.add('active', 'bg-jharkhand-green', 'text-white');
+            event.target.classList.remove('bg-white', 'text-gray-700');
+            
+            renderDestinations(category);
+        }
+
+        function renderDestinations(category) {
+            const grid = document.getElementById('destinations-grid');
+            const filteredDestinations = category === 'all' ? destinations : destinations.filter(d => d.category === category);
+            
+            grid.innerHTML = filteredDestinations.map(dest => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover fade-in">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-2">${dest.icon}</div>
+                            <div class="font-semibold">${dest.name}</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">${dest.name}</h3>
+                        <p class="text-gray-600 text-sm mb-4">${dest.description}</p>
+                        <div class="space-y-2 text-xs text-gray-500 mb-4">
+                            <div><strong>Best Time:</strong> ${dest.bestTime}</div>
+                            <div><strong>How to Reach:</strong> ${dest.howToReach}</div>
+                        </div>
+                        <button onclick="showDestinationDetails('${dest.id}')" class="w-full bg-jharkhand-green text-white py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            View Details & Book
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showDestinationDetails(destId) {
+            const dest = destinations.find(d => d.id === destId);
+            if (!dest) return;
+            
+            document.getElementById('modal-title').textContent = dest.name;
+            document.getElementById('modal-content').innerHTML = `
+                <div class="space-y-6">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">${dest.icon}</div>
+                        <p class="text-gray-600">${dest.description}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2">📅 Best Time to Visit</h4>
+                            <p class="text-gray-600">${dest.bestTime}</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2">🚗 How to Reach</h4>
+                            <p class="text-gray-600">${dest.howToReach}</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2">🏨 Nearby Stays</h4>
+                            <p class="text-gray-600">${dest.nearbyStays}</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2">💰 Estimated Cost</h4>
+                            <p class="text-gray-600">₹2,000 - ₹5,000 per person</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button onclick="bookDestination('${dest.id}')" class="flex-1 bg-jharkhand-green text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+                            Book Now
+                        </button>
+                        <button onclick="addToWishlist('${dest.id}')" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 transition-colors">
+                            Add to Wishlist
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('destination-modal').classList.add('active');
+        }
+
+        // Trip planner
+        function setupPreferenceOptions() {
+            document.querySelectorAll('.preference-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    const div = this.querySelector('div');
+                    
+                    checkbox.checked = !checkbox.checked;
+                    
+                    if (checkbox.checked) {
+                        div.classList.add('bg-jharkhand-green', 'text-white');
+                        div.classList.remove('bg-gray-100');
+                    } else {
+                        div.classList.remove('bg-jharkhand-green', 'text-white');
+                        div.classList.add('bg-gray-100');
+                    }
+                });
+            });
+        }
+
+        function openPlanTrip() {
+            scrollToSection('plan');
+        }
+
+        function generateItinerary() {
+            const selectedPreferences = Array.from(document.querySelectorAll('.preference-option input:checked')).map(input => input.value);
+            const duration = document.getElementById('trip-duration').value;
+            
+            if (selectedPreferences.length === 0) {
+                alert('Please select at least one preference!');
+                return;
+            }
+            
+            // Simulate AI generation
+            const itinerary = generateAIItinerary(selectedPreferences, duration);
+            
+            document.getElementById('itinerary-content').innerHTML = itinerary;
+            document.getElementById('itinerary-modal').classList.add('active');
+        }
+
+        function generateAIItinerary(preferences, duration) {
+            const itineraries = {
+                '1': {
+                    nature: 'Day 1: Visit Hundru Falls → Lunch at local restaurant → Evening at Rock Garden',
+                    adventure: 'Day 1: Trekking at Netarhat → Rock climbing → Sunset point',
+                    culture: 'Day 1: Tribal village visit → Handicraft workshop → Cultural performance',
+                    spiritual: 'Day 1: Baidyanath Temple → Meditation session → Evening aarti'
+                },
+                '2': {
+                    nature: 'Day 1: Hundru Falls → Dassam Falls<br>Day 2: Netarhat sunrise → Nature walk',
+                    adventure: 'Day 1: Betla National Park safari<br>Day 2: Parasnath Hills trek',
+                    culture: 'Day 1: Tribal village experience<br>Day 2: Handicraft shopping → Cultural center',
+                    spiritual: 'Day 1: Deoghar temples<br>Day 2: Parasnath Jain temples'
+                }
+            };
+            
+            const selectedItinerary = preferences.map(pref => 
+                itineraries[duration] ? itineraries[duration][pref] || 'Custom experience based on your preference' : 'Extended trip with multiple destinations'
+            ).join('<br><br>');
+            
+            return `
+                <div class="space-y-6">
+                    <div class="bg-jharkhand-green text-white p-6 rounded-lg">
+                        <h4 class="text-xl font-bold mb-2">🤖 AI-Generated Itinerary</h4>
+                        <p>Based on your preferences: ${preferences.join(', ')}</p>
+                        <p>Duration: ${duration} day(s)</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h4 class="font-bold mb-4">Your Personalized Plan:</h4>
+                        <div class="text-gray-700">${selectedItinerary}</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="text-center p-4 bg-blue-50 rounded-lg">
+                            <div class="text-2xl mb-2">💰</div>
+                            <div class="font-bold">Estimated Cost</div>
+                            <div class="text-blue-600">₹${duration * 3000} - ₹${duration * 6000}</div>
+                        </div>
+                        <div class="text-center p-4 bg-green-50 rounded-lg">
+                            <div class="text-2xl mb-2">🏨</div>
+                            <div class="font-bold">Accommodations</div>
+                            <div class="text-green-600">${duration} night(s) included</div>
+                        </div>
+                        <div class="text-center p-4 bg-purple-50 rounded-lg">
+                            <div class="text-2xl mb-2">🚗</div>
+                            <div class="font-bold">Transport</div>
+                            <div class="text-purple-600">Local transport arranged</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button onclick="bookItinerary()" class="flex-1 bg-jharkhand-green text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+                            Book This Itinerary
+                        </button>
+                        <button onclick="customizeItinerary()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 transition-colors">
+                            Customize Further
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Marketplace functions
+        function addToCart(itemId) {
+            // Simulate adding to cart
+            showNotification('Item added to cart! 🛒');
+        }
+
+        function bookHomestay(homestayId) {
+            showNotification('Homestay booking initiated! 🏠');
+        }
+
+        function openMarketplace() {
+            showNotification('Opening full marketplace... 🛍️');
+        }
+
+        // Cultural modal
+        function openCultureModal() {
+            showNotification('Cultural experiences section coming soon! 🎭');
+        }
+
+        // Community functions
+        function joinCommunity() {
+            showNotification('Community registration form would open here! 👥');
+        }
+
+        function registerPartner() {
+            showNotification('Partner registration form would open here! 🤝');
+        }
+
+        // Chatbot
+        function toggleChatbot() {
+            const chatWindow = document.getElementById('chatbot-window');
+            chatWindow.classList.toggle('hidden');
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            // Add user message
+            messagesContainer.innerHTML += `
+                <div class="text-right mb-3">
+                    <div class="bg-jharkhand-green text-white rounded-lg p-3 inline-block max-w-xs">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            // Simulate bot response
+            setTimeout(() => {
+                const botResponse = generateBotResponse(message);
+                messagesContainer.innerHTML += `
+                    <div class="bg-gray-100 rounded-lg p-3 mb-3">
+                        <p class="text-sm">${botResponse}</p>
+                    </div>
+                `;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1000);
+            
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function generateBotResponse(message) {
+            const responses = {
+                'weather': 'The weather in Jharkhand is pleasant from October to March. Summer can be hot, and monsoon brings beautiful waterfalls!',
+                'transport': 'You can reach Jharkhand by train, bus, or flight to Ranchi. Local transport includes buses, taxis, and auto-rickshaws.',
+                'food': 'Try local delicacies like Dhuska, Litti Chokha, Pitha, and tribal cuisines. Many restaurants serve authentic Jharkhandi food.',
+                'hotels': 'We have partnered homestays, forest lodges, and hotels. Would you like me to help you find accommodation?',
+                'default': 'That\'s interesting! For specific information about destinations, weather, transport, or bookings, feel free to ask. I\'m here to help make your Jharkhand trip amazing! 🌿'
+            };
+            
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('weather') || lowerMessage.includes('climate')) {
+                return responses.weather;
+            } else if (lowerMessage.includes('transport') || lowerMessage.includes('travel') || lowerMessage.includes('reach')) {
+                return responses.transport;
+            } else if (lowerMessage.includes('food') || lowerMessage.includes('eat') || lowerMessage.includes('restaurant')) {
+                return responses.food;
+            } else if (lowerMessage.includes('hotel') || lowerMessage.includes('stay') || lowerMessage.includes('accommodation')) {
+                return responses.hotels;
+            } else {
+                return responses.default;
+            }
+        }
+
+        // Utility functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showNotification(message) {
+            // Create a simple notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-jharkhand-green text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function bookDestination(destId) {
+            showNotification('Booking process initiated! You will be redirected to payment. 💳');
+        }
+
+        function addToWishlist(destId) {
+            showNotification('Added to your wishlist! ❤️');
+        }
+
+        function bookItinerary() {
+            showNotification('Itinerary booking initiated! Our team will contact you soon. 📞');
+        }
+
+        function customizeItinerary() {
+            showNotification('Customization options would open here! ✏️');
+        }
+
+        // Chat input enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendChatMessage();
+                    }
+                });
+            }
+        });
+
+        // Emergency SOS Functions
+        function sendSOSAlert() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    showNotification(`🚨 SOS Alert sent! Location: ${lat.toFixed(4)}, ${lon.toFixed(4)}. Emergency services notified.`);
+                }, function() {
+                    showNotification('🚨 SOS Alert sent! Unable to get location, but emergency services have been notified.');
+                });
+            } else {
+                showNotification('🚨 SOS Alert sent! Emergency services have been notified.');
+            }
+        }
+
+        // Weather Alert Functions
+        function showRandomWeatherAlert() {
+            const alerts = [
+                'Heavy rainfall expected in Ranchi region',
+                'Fog warning for Netarhat area',
+                'Clear skies perfect for Hundru Falls visit',
+                'Mild weather ideal for Betla safari'
+            ];
+            
+            // Show alert randomly (30% chance)
+            if (Math.random() < 0.3) {
+                const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
+                document.getElementById('weather-message').textContent = `Weather Alert: ${randomAlert}`;
+                document.getElementById('weather-alert').classList.remove('hidden');
+            }
+        }
+
+        function closeWeatherAlert() {
+            document.getElementById('weather-alert').classList.add('hidden');
+        }
+
+        function updateWeatherInfo() {
+            // Simulate live weather updates
+            const temperatures = [25, 26, 27, 28, 29, 30];
+            const conditions = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain'];
+            
+            setInterval(() => {
+                const temp = temperatures[Math.floor(Math.random() * temperatures.length)];
+                const condition = conditions[Math.floor(Math.random() * conditions.length)];
+                
+                document.getElementById('current-weather').innerHTML = `
+                    <div class="text-2xl font-bold">${temp}°C</div>
+                    <div class="text-sm">${condition}</div>
+                    <div class="text-xs">Ranchi - Updated just now</div>
+                `;
+            }, 60000); // Update every minute
+        }
+
+        // Countdown Timer
+        function startCountdownTimer() {
+            let hours = 23;
+            let minutes = 45;
+            let seconds = 30;
+            
+            setInterval(() => {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                        if (hours < 0) {
+                            hours = 23;
+                            minutes = 59;
+                            seconds = 59;
+                        }
+                    }
+                }
+                
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        // Offers Functions
+        function claimOffer(offerType) {
+            const offers = {
+                'early-bird': 'Early Bird 40% OFF offer claimed! Check your email for booking details.',
+                'adventure': 'Adventure Package booked! You will receive confirmation shortly.',
+                'group': 'Group discount request submitted! Our team will contact you within 24 hours.'
+            };
+            
+            showNotification(offers[offerType] || 'Offer claimed successfully! 🎉');
+        }
+
+        function showTravelAlerts() {
+            const alertModal = `
+                <div class="space-y-4">
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">Road construction on NH-33 between Ranchi and Netarhat. Expected delay: 30-45 minutes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-100 border-l-4 border-blue-500 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">Betla National Park: Safari timings extended due to good weather conditions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-100 border-l-4 border-green-500 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">Hundru Falls: Water levels are perfect for visiting. Best photo opportunities available.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modal-title').textContent = 'Live Travel Alerts';
+            document.getElementById('modal-content').innerHTML = alertModal;
+            document.getElementById('destination-modal').classList.add('active');
+        }
+
+        // New section rendering functions
+        function renderAccommodations(type) {
+            const grid = document.getElementById('accommodation-grid');
+            const filtered = type === 'all' ? accommodations : accommodations.filter(a => a.type === type);
+            
+            grid.innerHTML = filtered.map(acc => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-green-500 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-2">🏨</div>
+                            <div class="font-semibold">${acc.name}</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg">${acc.name}</h3>
+                            <div class="flex items-center space-x-1">
+                                <span class="text-yellow-500">⭐</span>
+                                <span class="text-sm font-semibold">${acc.rating}</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-2">📍 ${acc.location}</p>
+                        <p class="text-gray-600 text-sm mb-4">${acc.description}</p>
+                        <div class="flex flex-wrap gap-1 mb-4">
+                            ${acc.amenities.map(amenity => `<span class="bg-gray-100 text-xs px-2 py-1 rounded">${amenity}</span>`).join('')}
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-jharkhand-green font-bold text-lg">${acc.price}/night</span>
+                            <button onclick="bookAccommodation('${acc.id}')" class="bg-jharkhand-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderRestaurants(type) {
+            const grid = document.getElementById('restaurant-grid');
+            const filtered = type === 'all' ? restaurants : restaurants.filter(r => r.type === type);
+            
+            grid.innerHTML = filtered.map(rest => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-2">🍽️</div>
+                            <div class="font-semibold">${rest.name}</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg">${rest.name}</h3>
+                            <div class="flex items-center space-x-1">
+                                <span class="text-yellow-500">⭐</span>
+                                <span class="text-sm font-semibold">${rest.rating}</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-2">📍 ${rest.location} • ${rest.cuisine}</p>
+                        <p class="text-gray-600 text-sm mb-4">${rest.description}</p>
+                        <div class="mb-4">
+                            <div class="text-sm font-semibold mb-2">Specialties:</div>
+                            <div class="flex flex-wrap gap-1">
+                                ${rest.specialties.map(specialty => `<span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">${specialty}</span>`).join('')}
+                            </div>
+                        </div>
+                        <button onclick="viewRestaurantMenu('${rest.id}')" class="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                            View Menu & Directions
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPackages(type) {
+            const grid = document.getElementById('packages-grid');
+            const filtered = type === 'all' ? packages : packages.filter(p => p.type === type);
+            
+            grid.innerHTML = filtered.map(pkg => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-2">🎒</div>
+                            <div class="font-semibold">${pkg.name}</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">${pkg.name}</h3>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-600 text-sm">⏱️ ${pkg.duration}</span>
+                            <span class="text-jharkhand-green font-bold text-lg">${pkg.price}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">${pkg.description}</p>
+                        <div class="mb-4">
+                            <div class="text-sm font-semibold mb-2">Destinations:</div>
+                            <div class="text-sm text-gray-600">${pkg.destinations.join(', ')}</div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="text-sm font-semibold mb-2">Includes:</div>
+                            <div class="flex flex-wrap gap-1">
+                                ${pkg.includes.map(item => `<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">${item}</span>`).join('')}
+                            </div>
+                        </div>
+                        <button onclick="bookPackage('${pkg.id}')" class="w-full bg-jharkhand-green text-white py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Book Package
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter functions
+        function filterAccommodation(type) {
+            document.querySelectorAll('.accommodation-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-jharkhand-green', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700');
+            });
+            event.target.classList.add('active', 'bg-jharkhand-green', 'text-white');
+            event.target.classList.remove('bg-white', 'text-gray-700');
+            renderAccommodations(type);
+        }
+
+        function filterRestaurants(type) {
+            document.querySelectorAll('.restaurant-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-jharkhand-green', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700');
+            });
+            event.target.classList.add('active', 'bg-jharkhand-green', 'text-white');
+            event.target.classList.remove('bg-white', 'text-gray-700');
+            renderRestaurants(type);
+        }
+
+        function filterPackages(type) {
+            document.querySelectorAll('.package-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-jharkhand-green', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700');
+            });
+            event.target.classList.add('active', 'bg-jharkhand-green', 'text-white');
+            event.target.classList.remove('bg-white', 'text-gray-700');
+            renderPackages(type);
+        }
+
+        // Weather forecast function
+        function generateWeatherForecast() {
+            const days = ['Today', 'Tomorrow', 'Day 3', 'Day 4', 'Day 5'];
+            const conditions = ['☀️', '⛅', '🌤️', '🌦️', '⛈️'];
+            const temps = [28, 26, 30, 25, 27];
+            
+            const forecastGrid = document.getElementById('weather-forecast');
+            forecastGrid.innerHTML = days.map((day, index) => `
+                <div class="text-center bg-white bg-opacity-10 rounded-lg p-4">
+                    <div class="font-semibold mb-2">${day}</div>
+                    <div class="text-3xl mb-2">${conditions[index]}</div>
+                    <div class="font-bold text-lg">${temps[index]}°C</div>
+                    <div class="text-sm opacity-90">${index % 2 === 0 ? 'Clear' : 'Cloudy'}</div>
+                </div>
+            `).join('');
+        }
+
+        // Modal and form functions
+        function openSOSModal() {
+            document.getElementById('sos-modal').classList.add('active');
+        }
+
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        function switchLoginTab(type) {
+            if (type === 'tourist') {
+                document.getElementById('tourist-tab').classList.add('bg-jharkhand-green', 'text-white');
+                document.getElementById('tourist-tab').classList.remove('bg-gray-200', 'text-gray-700');
+                document.getElementById('partner-tab').classList.remove('bg-jharkhand-green', 'text-white');
+                document.getElementById('partner-tab').classList.add('bg-gray-200', 'text-gray-700');
+                document.getElementById('tourist-login').classList.remove('hidden');
+                document.getElementById('partner-login').classList.add('hidden');
+            } else {
+                document.getElementById('partner-tab').classList.add('bg-jharkhand-green', 'text-white');
+                document.getElementById('partner-tab').classList.remove('bg-gray-200', 'text-gray-700');
+                document.getElementById('tourist-tab').classList.remove('bg-jharkhand-green', 'text-white');
+                document.getElementById('tourist-tab').classList.add('bg-gray-200', 'text-gray-700');
+                document.getElementById('partner-login').classList.remove('hidden');
+                document.getElementById('tourist-login').classList.add('hidden');
+            }
+        }
+
+        function loginUser(type) {
+            showNotification(`${type === 'tourist' ? 'Tourist' : 'Partner'} login successful! Welcome to Jharkhand Tourism! 🎉`);
+            closeModal('login-modal');
+        }
+
+        function showRegisterForm(type) {
+            closeModal('login-modal');
+            document.getElementById('register-title').textContent = `Register as ${type === 'tourist' ? 'Tourist' : 'Local Partner'}`;
+            
+            const content = type === 'tourist' ? `
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Full Name</label>
+                        <input type="text" class="w-full p-3 border rounded-lg" placeholder="Enter your full name" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Email</label>
+                        <input type="email" class="w-full p-3 border rounded-lg" placeholder="Enter your email" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Phone</label>
+                        <input type="tel" class="w-full p-3 border rounded-lg" placeholder="+91 XXXXX XXXXX" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Password</label>
+                        <input type="password" class="w-full p-3 border rounded-lg" placeholder="Create password" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Confirm Password</label>
+                        <input type="password" class="w-full p-3 border rounded-lg" placeholder="Confirm password" required>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" class="mr-2" required>
+                        <span class="text-sm">I agree to the Terms & Conditions</span>
+                    </div>
+                    <button onclick="registerUser('tourist')" type="button" class="w-full bg-jharkhand-green text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+                        Register as Tourist
+                    </button>
+                </form>
+            ` : `
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Business Name</label>
+                        <input type="text" class="w-full p-3 border rounded-lg" placeholder="Your business name" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Partner Type</label>
+                        <select class="w-full p-3 border rounded-lg" required>
+                            <option value="">Select type</option>
+                            <option value="guide">Local Guide</option>
+                            <option value="homestay">Homestay Owner</option>
+                            <option value="artisan">Handicraft Artisan</option>
+                            <option value="transport">Transport Provider</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Contact Person</label>
+                        <input type="text" class="w-full p-3 border rounded-lg" placeholder="Contact person name" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Email</label>
+                        <input type="email" class="w-full p-3 border rounded-lg" placeholder="Business email" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Phone</label>
+                        <input type="tel" class="w-full p-3 border rounded-lg" placeholder="+91 XXXXX XXXXX" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Location</label>
+                        <input type="text" class="w-full p-3 border rounded-lg" placeholder="Your location/area" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Experience</label>
+                        <textarea class="w-full p-3 border rounded-lg h-20" placeholder="Brief description of your services/experience"></textarea>
+                    </div>
+                    <button onclick="registerUser('partner')" type="button" class="w-full bg-jharkhand-brown text-white py-3 rounded-lg hover:bg-yellow-700 transition-colors">
+                        Register as Partner
+                    </button>
+                </form>
+            `;
+            
+            document.getElementById('register-content').innerHTML = content;
+            document.getElementById('register-modal').classList.add('active');
+        }
+
+        function registerUser(type) {
+            showNotification(`${type === 'tourist' ? 'Tourist' : 'Partner'} registration successful! Welcome to Jharkhand Tourism! 🎉`);
+            closeModal('register-modal');
+        }
+
+        function setupContactForm() {
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showNotification('Message sent successfully! We will get back to you soon. 📧');
+            });
+        }
+
+        // Booking and interaction functions
+        function bookAccommodation(id) {
+            showNotification('Accommodation booking initiated! You will receive confirmation shortly. 🏨');
+        }
+
+        function viewRestaurantMenu(id) {
+            showNotification('Opening restaurant menu and directions... 🍽️');
+        }
+
+        function bookPackage(id) {
+            showNotification('Package booking initiated! Our team will contact you for confirmation. 🎒');
+        }
+
+        function findNearbyRestaurants() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    showNotification('Finding restaurants near your location... 📍');
+                }, function() {
+                    showNotification('Please enable location access to find nearby restaurants. 📍');
+                });
+            } else {
+                showNotification('Geolocation not supported. Please search manually. 🔍');
+            }
+        }
+
+        function bookCab() {
+            showNotification('Redirecting to cab booking service... 🚗');
+        }
+
+        function showOnMap(location) {
+            showNotification(`Showing ${location} on map with directions and nearby facilities... 🗺️`);
+        }
+
+        function openFullMap() {
+            showNotification('Opening full interactive map with all destinations and facilities... 🗺️');
+        }
+
+        function subscribeWeatherAlerts() {
+            showNotification('Weather alert subscription activated! You will receive notifications. 🔔');
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98104a6b574c6ebf',t:'MTc1ODE5MjcxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
